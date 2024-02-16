@@ -5,7 +5,7 @@ def index(request):
     return render(request, 'catalog/index.html')
 
 
-def contacts(request):
+def contact(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         phone = request.POST.get('phone')
