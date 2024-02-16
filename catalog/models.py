@@ -10,7 +10,9 @@ class Category(models.Model):
         return f'{self.name} ({self.description})'
 
     class Meta:
-        pass
+        verbose_name = 'катекория'
+        verbose_name_plural = 'категории'
+
 
 class Product(models.Model):
     name = models.CharField(max_length=250, verbose_name='Наименование')
@@ -27,7 +29,8 @@ class Product(models.Model):
         return f'{self.name} {self.description} {self.photo} {self.category} {self.price} {self.created_at} {self.updated_at}'
 
     class Meta:
-        pass
+        verbose_name = 'продукт'
+        verbose_name_plural = 'продукты'
 
 
 
