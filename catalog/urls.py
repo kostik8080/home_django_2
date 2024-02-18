@@ -5,4 +5,5 @@ from catalog.views import index, contact
 urlpatterns = [
     path('', index),
     path('contacts/', contact),
+
 ]
