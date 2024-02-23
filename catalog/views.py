@@ -1,15 +1,17 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from .models import Product
-from django.template.loader import render_to_string
+
+from .models import Product, Category
+
 
 def index(request):
-    products = Product.objects.order_by('-id')[:5]
-    data_list = []
-    for product in products:
-        data_list.append(product.name)
+    products = Product.objects.all()
 
-    return render(request, 'catalog/index.html', {'products': data_list})
+    context = {
+        'object_list': products,
+        'title': 'Главная'
+
+    }
+    return render(request, 'catalog/index.html', context)
 
 
 def contact(request):
@@ -18,6 +20,21 @@ def contact(request):
         phone = request.POST.get('phone')
         message = request.POST.get('message')
         print(f"{name} ({phone}): {message}")
-    return render(request, 'catalog/contact.html')
+    context = {
+
+        'title': 'Контакты'
+
+    }
+    return render(request, 'catalog/contact.html', context)
 
 
+def product(request, pk):
+    category_item = Category.objects.get(pk=pk)
+
+
+    context = {
+        'object_list': Product.objects.filter(category_id=pk),
+        'title': category_item.name
+
+    }
+    return render(request, 'catalog/product.html', context)

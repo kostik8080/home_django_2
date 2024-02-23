@@ -20,8 +20,8 @@ class Product(models.Model):
     photo = models.ImageField(upload_to='catalog/', null=True, blank=True, verbose_name='Изоброжение')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
     price = models.IntegerField(verbose_name='Цена за покупку')
-    created_at = models.DateField(verbose_name='Дата создания')
-    updated_at = models.DateField(verbose_name='Дата изменения')
+    created_at = models.DateField(auto_now_add=True, verbose_name='Дата создания')
+    updated_at = models.DateField(auto_now=True, verbose_name='Дата изменения')
 
 
 
