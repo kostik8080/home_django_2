@@ -1,0 +1,28 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+{% include 'catalog/includes/inc_menu.html' with objects=objects %}
+
+<div class="container">
+    <div class="row text-center">
+        {% for object in object_list %}
+        <div class="col-4 mh-45">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">{{ object.category.name }}</h4>
+                </div>
+                <div class="card-body" >
+
+                        <h3 class="card-title pricing-card-title">{{ object.name | truncatechars:'40' }}</h3>
+                        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                            <li class="mb-2">{{ object.description | truncatechars:'100' }}</li>
+                            <li class="text-center fw-bold">{{ object.price }} руб.</li>
+
+                        </ul>
+                        <a href="{% url 'catalog:product_detail' object.pk %}" type="button" class="form-control btn btn-lg btn-block btn-outline-primary">Купить</a>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

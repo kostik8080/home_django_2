@@ -1,10 +1,10 @@
 {% extends 'catalog/base.html' %}
 {% load media_tags %}
 {% block content%}
-{% include 'catalog/includes/inc_menu.html' with objects=objects %}
+{% include 'catalog/includes/inc_menu.html' %}
 <div class="container justify-content-center">
     <div class="row text-center">
-        {% for product in object_list %}
+
         <div class="col-12 mh-45">
             <div class="card mb-4 box-shadow">
                 <div class="card-header">
@@ -12,20 +12,19 @@
                 </div>
                 <div class="card-body">
 
-                        <h2 class="card-title pricing-card-title">{{ product.name }}</h2>
+                        <h2 class="card-title pricing-card-title">{{ object.name }}</h2>
                         <img src="{{ product.photo|mymedia }}" alt="{{ product.name }}">
                         <ul class="list-unstyled mt-3 mb-4 text-center m-3">
-                            <li class="mb-4">{{ product.description }}</li>
-                            <li class="text-center fw-bold fs-2">{{ product.price }} руб.</li>
-                            <li class="text-start">Дата создания {{ product.created_at }}</li>
-                            <li class="text-start">Дата изменения {{ product.updated_at }}</li>
-
+                            <li class="mb-4">{{ object.description }}</li>
+                            <li class="text-center fw-bold fs-2">{{ object.price }} руб.</li>
+                            <li class="text-start">Дата создания {{ object.created_at }}</li>
+                            <li class="text-start">Дата изменения {{ object.updated_at }}</li>
                         </ul>
                         <button type="button" class="form-control btn btn-lg btn-block btn-outline-primary">Купить</button>
 
                 </div>
             </div>
         </div>
-        {% endfor %}
+
     </div>
 {% endblock %}
