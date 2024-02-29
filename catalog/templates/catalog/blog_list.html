@@ -1,0 +1,41 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+{% include 'catalog/includes/inc_menu.html' with objects=objects %}
+
+<div class="container">
+    <div class="row text-center">
+         <a href="{% url 'catalog:blog_create' %}" type="button" class="mb-3 form-control btn btn-lg btn-primary">Создать</a>
+        {% for object in object_list %}
+        <div class="col-4 mh-45">
+
+            <div class="card mb-4 box-shadow">
+
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">{{ object.category.name }}</h4>
+                </div>
+                <div class="card-body" >
+
+                        <h3 class="card-title pricing-card-title">{{ object.title | truncatechars:'40' }}</h3>
+                        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                            <li class="mb-2">{{ object.content | truncatechars:'100' }}</li>
+
+
+                        </ul>
+                        <a href="{% url 'catalog:blog_detail' object.pk %}" type="button" class="mb-3 form-control btn btn-lg btn-success">Просмотр</a>
+                        <a href="{% url 'catalog:blog_update' object.pk %}" type="button" class="mb-3 form-control btn btn-lg btn-warning">Редактировать</a>
+                        <a href="{% url 'catalog:blog_delete' object.pk %}" type="button" class="mb-3 form-control btn btn-lg btn-danger">Удалить</a>
+                        <a href="{% url 'catalog:blog_activate' object.pk %}" type="button" class="mb-3 form-control btn btn-lg btn-info">
+                        {% if object.is_published %}
+                           Деактивировать
+                        {% else %}
+                           Активировать
+                        {% endif %}
+                        </a>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

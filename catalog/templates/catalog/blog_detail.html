@@ -1,0 +1,33 @@
+{% extends 'catalog/base.html' %}
+{% load media_tags %}
+{% block content%}
+{% include 'catalog/includes/inc_menu.html' %}
+<div class="container justify-content-center">
+    <div class="row text-center">
+
+        <div class="col-12 mh-45">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+<!--                    <h4 class="my-0 font-weight-normal">{{ product.category.name }}</h4>-->
+                </div>
+                <div class="card-body">
+
+                        <h2 class="card-title pricing-card-title">{{ object.title }}</h2>
+                        <img src="{{ object.photo|mymedia }}" alt="{{ object.title }}">
+                        <ul class="list-unstyled mt-3 mb-4 text-center m-3">
+                            <li class="mb-4">{{ object.content }}</li>
+
+                            <li class="text-start">Опубликовано {{ object.is_published }}</li>
+                            <li class="text-start">Дата создания {{ object.created_at }}</li>
+                        </ul>
+
+
+                </div>
+                <div class="card-footer">
+                    <h3>Количество просмотров: {{ object.count_views }}</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
