@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from catalog.models import Category, Product, Blog
+from catalog.models import Category, Product
+from blog.models import Blog
 
 
 # Register your models here.
