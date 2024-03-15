@@ -51,7 +51,7 @@ class BlogUpdateView(UpdateView):
 
 
     def get_success_url(self):
-        return reverse('catalog:blog_detail', args=[self.kwargs.get('pk')])
+        return reverse('catalog:blog_detail')
 
 
 class BlogDeleteView(DeleteView):

@@ -3,8 +3,9 @@
 {% include 'catalog/includes/inc_menu.html' with objects=objects %}
 
 <div class="container">
+    <a href="{% url 'catalog:product_create' %}" class="btn btn-outline-primary mb-2">Добавить продукт</a>
     <div class="row text-center">
-        {% for object in object_list %}
+        {% for object in products %}
         <div class="col-4 mh-45">
             <div class="card mb-4 box-shadow">
                 <div class="card-header">
@@ -15,10 +16,13 @@
                         <h3 class="card-title pricing-card-title">{{ object.name | truncatechars:'40' }}</h3>
                         <ul class="list-unstyled mt-3 mb-4 text-start m-3">
                             <li class="mb-2">{{ object.description | truncatechars:'100' }}</li>
-                            <li class="text-center fw-bold">{{ object.price }} руб.</li>
+                            <li class="text-center fw-bold mb-3">{{ object.price }} руб.</li>
+                            <li>Активная версия: <strong>{{ object.active_version }}</strong></li>
+
 
                         </ul>
-                        <a href="{% url 'catalog:product_detail' object.pk %}" type="button" class="form-control btn btn-lg btn-block btn-outline-primary">Купить</a>
+                        <a href="{% url 'catalog:product_detail' object.pk %}" type="button" class="form-control btn btn-lg btn-block btn-outline-primary mb-3">Купить</a>
+                        <a href="{% url 'catalog:product_update' object.pk %}" type="button" class="form-control btn btn-lg btn-block btn-outline-primary ">Изменить</a>
 
                 </div>
             </div>
