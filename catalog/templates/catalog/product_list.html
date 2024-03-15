@@ -17,10 +17,7 @@
                     <ul class="list-unstyled mt-3 mb-4 text-start m-3">
                         <li class="mb-2">{{ object.description | truncatechars:'100' }}</li>
                         <li class="text-center fw-bold mb-3">{{ object.price }} руб.</li>
-                            {% if object.current_version == true %}
-                                <li>Активная версия: <strong>{{ object.active_version }}</strong></li>
-                            {% endif %}
-
+                        <li>Активная версия: <strong>{{ object.active_version }}</strong></li>
                     </ul>
                     <a href="{% url 'catalog:product_detail' object.pk %}" type="button"
                        class="form-control btn btn-lg btn-block btn-outline-primary mb-3">Купить</a>
