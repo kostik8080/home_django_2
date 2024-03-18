@@ -1,5 +1,5 @@
 from django import forms
-
+from django.db.models import Q
 from catalog.models import Product, Version
 
 
@@ -11,8 +11,10 @@ class StyleFormMixin:
             if isinstance(field, forms.BooleanField):
                 field.widget.attrs.update({'class': 'form-check-input'})
 
+
 class ProductForm(StyleFormMixin, forms.ModelForm):
     words = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция', 'радар']
+
     class Meta:
         model = Product
         fields = '__all__'
@@ -36,3 +38,15 @@ class VersionForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Version
         fields = '__all__'
+
+    def clean_current_version(self):
+        active_version = []
+        version = Version.objects.filter(Q(current_version=True))
+        cleaned_data = self.cleaned_data['current_version']
+        active_version.append(cleaned_data) if cleaned_data else None
+        # if cleaned_data:
+        #     active_version.append(cleaned_data)
+        if len(active_version) == 1 and version:
+            raise forms.ValidationError('Вы можете установить только одну версию в качестве текущей')
+
+        return cleaned_data

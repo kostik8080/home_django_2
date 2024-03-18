@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from pytils.translit import slugify
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
-
+from django.db.models import Q
 from .forms import ProductForm, VersionForm
 from .models import Product, Category, Version
 
@@ -12,19 +12,7 @@ class ProductListView(ListView):
     model = Product
     extra_context = {'title': 'Главная'}
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     queryset = queryset.filter(category_id=self.kwargs.get('pk'))
-    #     return queryset
-    #
-    # def get_context_data(self, *args, **kwargs):
-    #     context_data = super().get_context_data(*args, **kwargs)
-    #     category_data = Category.objects.get(pk=self.kwargs.get('pk'))
-    #     context_data['category_pk'] = category_data.pk
-    #     context_data['title'] = f'{category_data.name}'
-    #     for product in context_data.get('object_list'):
-    #         product.version = product.version_set.filter(current_version=True).first()
-    #     return context_data
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -80,8 +68,17 @@ class ProductUpdateView(UpdateView):
             formset.save()
         return super().form_valid(form)
 
+    # def get_queryset (self):
+    #     query_set = Version.objects.filter(Q(current_version=True))
+    #
+    #     # Получение только одной активной версии
+    #     active_version = query_set.first()
+    #     if active_version:
+    #         query_set = query_set.filter(current_version=True)
+    #     else:
+    #         query_set = query_set.filter(current_version=False)
+    #     return query_set
+
 class ProductDeleteView(DeleteView):
     model = Product
     success_url = reverse_lazy('catalog:index')
-
-
