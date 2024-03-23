@@ -1,4 +1,5 @@
-from django.forms import inlineformset_factory
+from django.forms import inlineformset_factory, formset_factory
+from django.http import request
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from pytils.translit import slugify
@@ -11,8 +12,6 @@ from .models import Product, Category, Version
 class ProductListView(ListView):
     model = Product
     extra_context = {'title': 'Главная'}
-
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -50,34 +49,39 @@ class ProductUpdateView(UpdateView):
         return reverse('catalog:product_update', args=[self.kwargs.get('pk')])
 
     def get_context_data(self, **kwargs):
+        # Получение базового контекста с помощью super()
+        global queryset
         context_data = super().get_context_data(**kwargs)
+
+        # Создание формсета
         VersionFormSet = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
+
         if self.request.method == 'POST':
+
             formset = VersionFormSet(self.request.POST, instance=self.object)
         else:
+            # Если запрос GET, создаем пустой формсет
             formset = VersionFormSet(instance=self.object)
+
+        # Добавление формсета в контекст
         context_data['formset'] = formset
+
         return context_data
 
     def form_valid(self, form):
+        # Получение контекста данных
         context_data = self.get_context_data()
         formset = context_data['formset']
+
+        # Сохранение основной формы
         self.object = form.save()
+
         if formset.is_valid():
             formset.instance = self.object
             formset.save()
+
         return super().form_valid(form)
 
-    # def get_queryset (self):
-    #     query_set = Version.objects.filter(Q(current_version=True))
-    #
-    #     # Получение только одной активной версии
-    #     active_version = query_set.first()
-    #     if active_version:
-    #         query_set = query_set.filter(current_version=True)
-    #     else:
-    #         query_set = query_set.filter(current_version=False)
-    #     return query_set
 
 class ProductDeleteView(DeleteView):
     model = Product
