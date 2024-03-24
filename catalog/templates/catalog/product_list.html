@@ -18,6 +18,11 @@
                         <li class="mb-2">{{ object.description | truncatechars:'100' }}</li>
                         <li class="text-center fw-bold mb-3">{{ object.price }} руб.</li>
                         <li>Активная версия: <strong>{{ object.active_version }}</strong></li>
+                        {% if object.users.email %}
+                        <li>Владелец: <strong>{{ object.users.email }}</strong></li>
+                        {% else %}
+                        <li>Владелец: <strong>не указан</strong></li>
+                        {% endif %}
                     </ul>
                     <a href="{% url 'catalog:product_detail' object.pk %}" type="button"
                        class="form-control btn btn-lg btn-block btn-outline-primary mb-3">Купить</a>

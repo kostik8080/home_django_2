@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory, formset_factory
 from django.http import request
 from django.shortcuts import render, get_object_or_404, redirect
@@ -9,7 +10,7 @@ from .forms import ProductForm, VersionForm
 from .models import Product, Category, Version
 
 
-class ProductListView(ListView):
+class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     extra_context = {'title': 'Главная'}
 
@@ -31,17 +32,25 @@ class ContactView(TemplateView):
     template_name = 'catalog/contact.html'
 
 
-class ProductDatailView(DetailView):
+class ProductDatailView(LoginRequiredMixin, DetailView):
     model = Product
 
 
-class ProductCreateView(CreateView):
+
+
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('catalog:index')
 
+    def form_valid(self, form):
+        user_name = form.save()
+        user_name.users = self.request.user
+        user_name.save()
+        return super().form_valid(form)
 
-class ProductUpdateView(UpdateView):
+
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
 
@@ -83,6 +92,6 @@ class ProductUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     success_url = reverse_lazy('catalog:index')

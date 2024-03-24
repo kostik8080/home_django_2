@@ -1,3 +1,6 @@
+import random
+import string
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
@@ -5,6 +8,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, TemplateView
 
+from users import forms
 from users.forms import UserRegisterForm, UserProfileForm
 from users.models import User
 
@@ -20,8 +24,7 @@ from django.utils.encoding import force_str
 from users.token import account_activation_token
 
 
-# class ActivateView(TemplateView):
-#     template_name = 'users/acc_active_email.html'
+
 
 
 class RegisterView(CreateView):
@@ -36,8 +39,7 @@ class RegisterView(CreateView):
         user.is_active = False
         user.save()
 
-        # Генерация токена для подтверждения адреса электронной почты
-        # token = default_token_generator.make_token(user)
+
 
         # Получение текущего сайта
         current_site = get_current_site(self.request)
@@ -85,3 +87,31 @@ def activate(request, uidb64, token):
         return redirect(reverse('users:register_done'))
     else:
         return redirect(reverse('users:register_error'))
+
+
+
+
+
+def password_reset(request):
+
+    if request.method == 'POST':
+        email = request.POST['email']
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return render(request, 'users/password_reset_form.html', {'error_message': 'Пользователь с таким email не найден'})
+        new_password = ''.join([random.choice(string.ascii_letters + string.digits) for _ in range(10)])
+        send_mail(
+            subject='Вы сменили пароль',
+            message=f'ваш новый пароль: {new_password}',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[user.email],
+        )
+
+        user.set_password(new_password)
+        user.save()
+
+        return redirect(reverse('users:password_reset_done'))
+    return render(request, 'users/password_reset_form.html')
+
+
