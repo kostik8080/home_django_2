@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
@@ -6,8 +7,9 @@ from pytils.translit import slugify
 from blog.models import Blog
 
 
-class BlogListView(ListView):
+class BlogListView(PermissionRequiredMixin, ListView):
     model = Blog
+    permission_required = 'blog.view_blog'
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
@@ -16,10 +18,11 @@ class BlogListView(ListView):
 
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(PermissionRequiredMixin, CreateView):
     model = Blog
     fields = ('title', 'content', 'slug', 'photo',)
     success_url = reverse_lazy('catalog:blog_list')
+    permission_required = 'blog.add_blog'
 
     def form_valid(self, form):
         if form.is_valid():
@@ -33,8 +36,9 @@ class BlogCreateView(CreateView):
 
 
 
-class BlogDetailView(DetailView):
+class BlogDetailView(PermissionRequiredMixin, DetailView):
     model = Blog
+    permission_required = 'blog.view_blog'
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
@@ -43,10 +47,11 @@ class BlogDetailView(DetailView):
         return self.object
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(PermissionRequiredMixin, UpdateView):
     model = Blog
     fields = ('title', 'content', 'slug', 'photo',)
     #success_url = reverse_lazy('catalog:blog_detail')
+    permission_required = 'blog.change_blog'
 
 
 
@@ -54,9 +59,10 @@ class BlogUpdateView(UpdateView):
         return reverse('catalog:blog_detail')
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(PermissionRequiredMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy('catalog:blog_list')
+    permission_required = 'blog.delete_blog'
 
 
 def activates(request, pk):

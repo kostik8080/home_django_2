@@ -5,7 +5,9 @@
 
 <div class="container">
     <div class="row text-center">
+        {% if perms.blog.add_blog %}
          <a href="{% url 'blog:blog_create' %}" type="button" class="mb-3 form-control btn btn-lg btn-primary">Создать</a>
+        {% endif %}
         {% for object in object_list %}
         <div class="col-4 mh-45">
 
@@ -22,17 +24,24 @@
 
 
                         </ul>
+
                         <a href="{% url 'blog:blog_detail' object.pk %}" type="button" class="mb-3 form-control btn btn-lg btn-success">Просмотр</a>
+                    {% if perms.blog.change_blog %}
                         <a href="{% url 'blog:blog_update' object.pk %}" type="button" class="mb-3 form-control btn btn-lg btn-warning">Редактировать</a>
+                    {% endif %}
+                    {% if perms.blog.delete_blog %}
                         <a href="{% url 'blog:blog_delete' object.pk %}" type="button" class="mb-3 form-control btn btn-lg btn-danger">Удалить</a>
+                    {% endif %}
+                    {% if perms.blog.change_blog %}
                         <a href="{% url 'blog:blog_activate' object.pk %}" type="button" class="mb-3 form-control btn btn-lg btn-info">
+
                         {% if object.is_published %}
                            Деактивировать
                         {% else %}
                            Активировать
                         {% endif %}
                         </a>
-
+                    {% endif %}
                 </div>
             </div>
         </div>

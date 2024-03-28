@@ -26,9 +26,26 @@
                     </ul>
                     <a href="{% url 'catalog:product_detail' object.pk %}" type="button"
                        class="form-control btn btn-lg btn-block btn-outline-primary mb-3">Купить</a>
-                    <a href="{% url 'catalog:product_update' object.pk %}" type="button"
-                       class="form-control btn btn-lg btn-block btn-outline-primary ">Изменить</a>
+                    {% if user.is_superuser %}
+                        <a href="{% url 'catalog:product_update' object.pk %}" type="button"
+                                class="form-control btn btn-lg btn-block btn-outline-primary ">Изменить</a>
+                    {% else %}
+                        {% if user.is_staff %}
+                            {% if perms.catalog.set_is_published and perms.catalog.change_discription and perms.catalog.change_category %}
+                                <a href="{% url 'catalog:product_update' object.pk %}" type="button"
+                                class="form-control btn btn-lg btn-block btn-outline-primary ">Изменить</a>
+                            {% endif %}
+                        {% endif %}
+                        {% if user.is_active %}
+                            {% if perms.catalog.change_product %}
+                                {% if user.email == object.users.email %}
 
+                                    <a href="{% url 'catalog:product_update' object.pk %}" type="button"
+                                    class="form-control btn btn-lg btn-block btn-outline-primary ">Изменить</a>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
                 </div>
             </div>
         </div>

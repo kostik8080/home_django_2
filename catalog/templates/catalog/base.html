@@ -41,6 +41,7 @@
                                 <li>
                                     <form method="post" enctype="multipart/form-data" action="{% url 'users:logout' %}">
                                         {% csrf_token %}
+                                        <p class="text-center">{{ user.email }}</p>
                                         <button class="dropdown-item" type="submit">Выйти из профиля</button>
                                     </form>
                                     <a class="dropdown-item" href="{% url 'users:profile' %}">Изменить профиль</a>
