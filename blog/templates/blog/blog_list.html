@@ -5,9 +5,10 @@
 
 <div class="container">
     <div class="row text-center">
-        {% if perms.blog.add_blog %}
-         <a href="{% url 'blog:blog_create' %}" type="button" class="mb-3 form-control btn btn-lg btn-primary">Создать</a>
-        {% endif %}
+
+        <a href="{% url 'blog:blog_create' %}" type="button"
+           class="mb-3 form-control btn btn-lg btn-primary">Создать</a>
+
         {% for object in object_list %}
         <div class="col-4 mh-45">
 
@@ -16,35 +17,39 @@
                 <div class="card-header">
                     <h4 class="my-0 font-weight-normal">{{ object.category.name }}</h4>
                 </div>
-                <div class="card-body" >
+                <div class="card-body">
 
-                        <h3 class="card-title pricing-card-title">{{ object.title | truncatechars:'23' }}</h3>
-                        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-                            <li class="mb-2">{{ object.content | truncatechars:'100' }}</li>
+                    <h3 class="card-title pricing-card-title">{{ object.title | truncatechars:'23' }}</h3>
+                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                        <li class="mb-2">{{ object.content | truncatechars:'100' }}</li>
 
 
-                        </ul>
+                    </ul>
 
-                        <a href="{% url 'blog:blog_detail' object.pk %}" type="button" class="mb-3 form-control btn btn-lg btn-success">Просмотр</a>
+                    <a href="{% url 'blog:blog_detail' object.pk %}" type="button"
+                       class="mb-3 form-control btn btn-lg btn-success">Просмотр</a>
                     {% if perms.blog.change_blog %}
-                        <a href="{% url 'blog:blog_update' object.pk %}" type="button" class="mb-3 form-control btn btn-lg btn-warning">Редактировать</a>
+                    <a href="{% url 'blog:blog_update' object.pk %}" type="button"
+                       class="mb-3 form-control btn btn-lg btn-warning">Редактировать</a>
                     {% endif %}
                     {% if perms.blog.delete_blog %}
-                        <a href="{% url 'blog:blog_delete' object.pk %}" type="button" class="mb-3 form-control btn btn-lg btn-danger">Удалить</a>
+                    <a href="{% url 'blog:blog_delete' object.pk %}" type="button"
+                       class="mb-3 form-control btn btn-lg btn-danger">Удалить</a>
                     {% endif %}
                     {% if perms.blog.change_blog %}
-                        <a href="{% url 'blog:blog_activate' object.pk %}" type="button" class="mb-3 form-control btn btn-lg btn-info">
+                    <a href="{% url 'blog:blog_activate' object.pk %}" type="button"
+                       class="mb-3 form-control btn btn-lg btn-info">
 
                         {% if object.is_published %}
-                           Деактивировать
+                        Деактивировать
                         {% else %}
-                           Активировать
+                        Активировать
                         {% endif %}
-                        </a>
+                    </a>
                     {% endif %}
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
-{% endblock %}
+    {% endblock %}

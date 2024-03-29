@@ -12,7 +12,7 @@ class StyleFormMixin:
                 field.widget.attrs.update({'class': 'form-check-input'})
 
 
-class ProductForm1(StyleFormMixin, forms.ModelForm):
+class ProductFormCatalog(StyleFormMixin, forms.ModelForm):
     words = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция', 'радар']
 
     class Meta:
@@ -35,7 +35,7 @@ class ProductForm1(StyleFormMixin, forms.ModelForm):
         return cleaned_data
 
 
-class ProductForm2(StyleFormMixin, forms.ModelForm):
+class ProductFormAllUser(StyleFormMixin, forms.ModelForm):
     words = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция', 'радар']
 
     class Meta:

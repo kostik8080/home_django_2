@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import Permission
 from django.forms import inlineformset_factory, formset_factory
 from django.http import request, Http404
 from django.shortcuts import render, get_object_or_404, redirect
@@ -8,16 +9,16 @@ from django.views import View
 from pytils.translit import slugify
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
 from django.db.models import Q
-from .forms import VersionForm, ProductForm1, ProductForm2
+from .forms import VersionForm, ProductFormCatalog, ProductFormAllUser
 from .models import Product, Category, Version
 from django.core.exceptions import PermissionDenied
 from django.utils.decorators import method_decorator
 
 
-class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     extra_context = {'title': 'Главная'}
-    permission_required = 'catalog.view_product'
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -33,20 +34,20 @@ class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return context
 
 
-class ContactView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+class ContactView(LoginRequiredMixin, TemplateView):
     template_name = 'catalog/contact.html'
-    permission_required = 'catalog.view_product'
 
 
-class ProductDatailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+
+class ProductDatailView(LoginRequiredMixin, DetailView):
     model = Product
-    permission_required = 'catalog.view_product'
 
 
-class ProductCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
-    form_class = ProductForm1
-    permission_required = 'catalog.add_product'
+    form_class = ProductFormCatalog
+
     success_url = reverse_lazy('catalog:index')
 
     def form_valid(self, form):
@@ -56,35 +57,30 @@ class ProductCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
         return super().form_valid(form)
 
 
-class UserPermissionMixin(View):
-    @property
-    def get_permiss(self):
-        if self.request.user.is_staff:
-            item_object = ('catalog.change_product', 'catalog.set_is_published', 'catalog.change_discription', 'catalog.change_category')
-            return item_object
-        if self.request.user.is_active and not self.request.user.is_superuser and not self.request.user.is_staff:
-            item_object = 'catalog.change_product'
-            return item_object
-
-
-class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UserPermissionMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
-    form_class = ProductForm1
+    form_class = ProductFormCatalog
 
-    permission_required = UserPermissionMixin.get_permiss
-
+    permission_required = ('catalog.change_product', 'catalog.set_is_published', 'catalog.change_discription',
+                           'catalog.change_category')
 
     def get_success_url(self):
         return reverse('catalog:product_update', args=[self.kwargs.get('pk')])
 
+
     def get_form_class(self):
-        if len(self.permission_required) == 4:
-            if self.request.user.has_perms(perm_list=self.permission_required) and not self.request.user.is_superuser:
-                return ProductForm2
-            else:
-                return ProductForm1
+        if self.request.user.is_staff and self.request.user.has_perms(
+                perm_list=self.permission_required) and not self.request.user.is_superuser:
+            return ProductFormAllUser
+        elif self.request.user.is_superuser and self.request.user.has_perm('catalog.change_product'):
+            return ProductFormCatalog
         else:
-            return ProductForm1
+            if self.request.user != self.get_object().users:
+                raise PermissionDenied
+            return ProductFormCatalog
+
+
+
 
 
 

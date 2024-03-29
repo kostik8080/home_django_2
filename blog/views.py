@@ -7,9 +7,9 @@ from pytils.translit import slugify
 from blog.models import Blog
 
 
-class BlogListView(PermissionRequiredMixin, ListView):
+class BlogListView(ListView):
     model = Blog
-    permission_required = 'blog.view_blog'
+
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
@@ -18,11 +18,11 @@ class BlogListView(PermissionRequiredMixin, ListView):
 
 
 
-class BlogCreateView(PermissionRequiredMixin, CreateView):
+class BlogCreateView(CreateView):
     model = Blog
     fields = ('title', 'content', 'slug', 'photo',)
     success_url = reverse_lazy('catalog:blog_list')
-    permission_required = 'blog.add_blog'
+
 
     def form_valid(self, form):
         if form.is_valid():
@@ -36,9 +36,9 @@ class BlogCreateView(PermissionRequiredMixin, CreateView):
 
 
 
-class BlogDetailView(PermissionRequiredMixin, DetailView):
+class BlogDetailView(DetailView):
     model = Blog
-    permission_required = 'blog.view_blog'
+
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
