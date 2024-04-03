@@ -25,7 +25,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('catalog.urls', namespace="catalog")),
     path('blog/', include('blog.urls', namespace="blog")),
-    path('users/', include('users.urls', namespace="users"))
+    path('users/', include('users.urls', namespace="users")),
+    path("__debug__/", include("debug_toolbar.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler403 = fobidden_view403
