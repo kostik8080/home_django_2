@@ -9,18 +9,21 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-rx%u5k(m34g=l_4x=&pddc#q#l9=)=+mxzes%m*#6z_(jarz$t'
+SECRET_KEY = os.getenv('SECRET_KEY_DJANGO')#'django-insecure-rx%u5k(m34g=l_4x=&pddc#q#l9=)=+mxzes%m*#6z_(jarz$t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -79,9 +82,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'catalog',
-        'USER': 'postgres',
-        'PASSWORD': '12345',
+        'NAME': os.getenv('NAME_DATABASE'),
+        'USER': os.getenv('USER_DATABASE'),
+        'PASSWORD': os.getenv('PASSWORD_DATABASE'),
 
     }
 }
@@ -147,10 +150,21 @@ EMAIL_USE_SSL = True
 # EMAIL_USE_TLS = True
 
 
-EMAIL_HOST_USER = 'onishenko.kostya@yandex.ru' ### Почта с которой приизводиться рассылка
-EMAIL_HOST_PASSWORD = 'cottigkvrfcvytvb' ### Сгенирированный пароль
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')### Почта с которой приизводиться рассылка
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') ### Пароль### Сгенирированный пароль
 
 
 EMAIL_SERVER = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = EMAIL_HOST_USER
+
+
+CACHE_ENABLED = os.getenv('CACHE_ENABLED') == 'True'
+
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": os.getenv('CACHE_LOCATION'),
+        }
+    }

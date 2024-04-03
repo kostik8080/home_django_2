@@ -3,6 +3,7 @@ import string
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
@@ -83,7 +84,11 @@ def activate(request, uidb64, token):
         user = None
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
+
         user.save()
+
+        group = Group.objects.get(name='Право на изменение')
+        user.groups.add(group)
         return redirect(reverse('users:register_done'))
     else:
         return redirect(reverse('users:register_error'))

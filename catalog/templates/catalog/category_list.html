@@ -1,0 +1,27 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+{% include 'catalog/includes/inc_menu.html' with objects=objects %}
+
+<div class="container">
+
+    <div class="row text-center">
+        {% for object in subjects %}
+        <div class="col-4 mh-45">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+
+                </div>
+                <div class="card-body">
+
+                    <h3 class="card-title pricing-card-title">{{ object.name | truncatechars:'40' }}</h3>
+                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                        <li class="mb-2">{{ object.description }}</li>
+
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endblock %}
