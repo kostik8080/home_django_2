@@ -154,8 +154,8 @@ EMAIL_USE_SSL = True
 # EMAIL_USE_TLS = True
 
 
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')### Почта с которой приизводиться рассылка
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') ### Пароль### Сгенирированный пароль
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  # Почта с которой приизводиться рассылка
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Пароль### Сгенирированный пароль
 
 
 EMAIL_SERVER = EMAIL_HOST_USER

@@ -25,9 +25,6 @@ from django.utils.encoding import force_str
 from users.token import account_activation_token
 
 
-
-
-
 class RegisterView(CreateView):
     model = User
     form_class = UserRegisterForm
@@ -39,8 +36,6 @@ class RegisterView(CreateView):
         user = form.save(commit=False)
         user.is_active = False
         user.save()
-
-
 
         # Получение текущего сайта
         current_site = get_current_site(self.request)
@@ -94,17 +89,14 @@ def activate(request, uidb64, token):
         return redirect(reverse('users:register_error'))
 
 
-
-
-
 def password_reset(request):
-
     if request.method == 'POST':
         email = request.POST['email']
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            return render(request, 'users/password_reset_form.html', {'error_message': 'Пользователь с таким email не найден'})
+            return render(request, 'users/password_reset_form.html',
+                          {'error_message': 'Пользователь с таким email не найден'})
         new_password = ''.join([random.choice(string.ascii_letters + string.digits) for _ in range(10)])
         send_mail(
             subject='Вы сменили пароль',
@@ -118,5 +110,3 @@ def password_reset(request):
 
         return redirect(reverse('users:password_reset_done'))
     return render(request, 'users/password_reset_form.html')
-
-

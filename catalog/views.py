@@ -1,18 +1,16 @@
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.models import Permission
-from django.forms import inlineformset_factory, formset_factory
-from django.http import request, Http404, HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+
+from django.forms import inlineformset_factory
+
+from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-from django.views import View
+
 from pytils.translit import slugify
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
-from django.db.models import Q
+
 from .forms import VersionForm, ProductFormCatalog, ProductFormAllUser
 from .models import Product, Category, Version
 from django.core.exceptions import PermissionDenied
-from django.utils.decorators import method_decorator
 
 from .services import get_cached_subjects_category
 
@@ -63,7 +61,8 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """Представление для редактирования продукта
     наследуется от Product и при наличии прав на редактирование продукта проверяется
-    если обычный пользователь и он владелец продукта он может редактировать, если администратор выводит форму редактирования
+    если обычный пользователь и он владелец продукта он может редактировать, если администратор выводит форму
+    редактирования
     только по определенным полям"""
     model = Product
     form_class = ProductFormCatalog
@@ -90,7 +89,7 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         # Получение базового контекста с помощью super()
-        global queryset
+
         context_data = super().get_context_data(**kwargs)
 
         # Создание формсета
